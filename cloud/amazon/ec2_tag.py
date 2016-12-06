@@ -89,19 +89,19 @@ tasks:
     instance: "{{ item.id }}"
     region: eu-west-1
     state: list
-  with_items: "{{ ec2.tagged_instances }}"
+  with_items: "{{ ec2.instances }}"
   register: ec2_vol
 
 - name: tag the volumes
   ec2_tag:
     region:  eu-west-1
-    resource: "{{ item.id }}"
+    resource: "{{ item.1.id }}"
     state: present
     tags: 
       Name: dbserver
       Env: production
   with_subelements: 
-    - ec2_vol.results
+    - "{{ec2_vol.results}}"
     - volumes
 
 # Playbook example of listing tags on an instance
